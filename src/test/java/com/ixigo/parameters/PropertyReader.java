@@ -6,11 +6,10 @@ import java.util.Properties;
 
 public class PropertyReader {
 
-    // Method to read the config.properties file
-    public static Properties readProperties() {
-        Properties prop = new Properties();
+    private static Properties prop = new Properties();
+
+    static {
         try {
-            // Load the properties file from the config directory
             String filePath = System.getProperty("user.dir") + "/src/test/resources/Config/config.properties";
             FileInputStream fis = new FileInputStream(filePath);
             prop.load(fis);
@@ -19,11 +18,20 @@ public class PropertyReader {
             System.err.println("Error reading properties file: " + e.getMessage());
             e.printStackTrace();
         }
-        return prop;
     }
 
-    // Optional: Method to get a specific property value
+    // Get property by key
     public static String getProperty(String key) {
-        return readProperties().getProperty(key);
+        return prop.getProperty(key);
+    }
+
+    // Get property by key with default value
+    public static String getProperty(String key, String defaultValue) {
+        return prop.getProperty(key, defaultValue);
+    }
+
+    // Get the Properties object
+    public static Properties readProperties() {
+        return prop;
     }
 }

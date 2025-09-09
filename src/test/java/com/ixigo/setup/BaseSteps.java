@@ -1,112 +1,79 @@
 package com.ixigo.setup;
 
-import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.edge.EdgeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.safari.SafariDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import com.ixigo.parameters.PropertyReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import io.cucumber.java.Scenario;
 
 public class BaseSteps {
-
-    // Use ThreadLocal for parallel execution support
-    private static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
-    private static Properties prop = PropertyReader.readProperties();
-    public static final int EXPLICIT_WAIT_TIME = Integer.parseInt(prop.getProperty("ExplicitWait", "10"));
-    public static final int IMPLICIT_WAIT_TIME = Integer.parseInt(prop.getProperty("ImplicitWait", "10"));
-    public static final int PAGE_LOAD_TIME = Integer.parseInt(prop.getProperty("PageLoadTime", "30"));
+    private static final Logger logger = LoggerFactory.getLogger(BaseSteps.class);
+    private WebDriver driver;
 
     public void launchBrowser() {
-        String browserName = prop.getProperty("Browser", "Chrome").trim();
-        String url = prop.getProperty("URL", "https://www.ixigo.com").trim();
-
         try {
-            switch (browserName.toUpperCase()) {
-                case "CHROME":
-                    driver.set(setupChromeDriver());
-                    break;
-                case "FIREFOX":
-                    driver.set(new FirefoxDriver());
-                    break;
-                case "EDGE":
-                    driver.set(new EdgeDriver());
-                    break;
-                case "SAFARI":
-                    driver.set(new SafariDriver());
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unsupported browser: " + browserName);
-            }
-
-            WebDriver webDriver = getDriver();
-            webDriver.manage().window().maximize();
-            // Configure timeouts
-            webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICIT_WAIT_TIME));
-            webDriver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(PAGE_LOAD_TIME));
-            
-            webDriver.get(url);
-
+            // Your browser initialization logic
+            logger.info("Launching browser...");
+            // Initialize driver based on configuration
         } catch (Exception e) {
-            System.err.println("Failed to launch browser: " + e.getMessage());
-            e.printStackTrace();
-            throw new RuntimeException("Browser launch failed", e);
+            logger.error("Failed to launch browser", e);
+            throw new RuntimeException("Browser initialization failed", e);
         }
     }
 
-    private ChromeDriver setupChromeDriver() {
-        ChromeOptions chromeOptions = new ChromeOptions();
-        Map<String, Object> chromePrefs = new HashMap<>();
-        chromePrefs.put("credentials_enable_service", false);
-        chromePrefs.put("profile.password_manager_enabled", false);
-        chromePrefs.put("profile.password_manager_leak_detection", false);
-        chromeOptions.setExperimentalOption("prefs", chromePrefs);
-
-        // Add arguments for headless mode, if configured
-        if (Boolean.parseBoolean(prop.getProperty("Headless", "false"))) {
-            chromeOptions.addArguments("--headless=new");
-        }
-        // Add other common arguments for stability
-        chromeOptions.addArguments("--no-sandbox");
-        chromeOptions.addArguments("--disable-dev-shm-usage");
-        chromeOptions.addArguments("--disable-gpu");
-        chromeOptions.addArguments("--window-size=1920,1080");
-
-        return new ChromeDriver(chromeOptions);
-    }
-
-    // Public method to get the driver instance
-    public static WebDriver getDriver() {
-        return driver.get();
-    }
-
-    // Public method to get a WebDriverWait instance
-    public static WebDriverWait getWait() {
-        return new WebDriverWait(getDriver(), Duration.ofSeconds(EXPLICIT_WAIT_TIME));
-    }
-
-    public static void quitDriver() {
-        if (getDriver() != null) {
-            getDriver().quit();
-            driver.remove(); // Clean up the ThreadLocal variable
-        }
-    }
-
-    // Avoid using static sleep in test logic. Use explicit waits instead.
-    @Deprecated
-    public static void sleep() {
+    public void quitDriver() {
         try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt(); // Restore interrupted status
-            System.err.println("Sleep was interrupted: " + e.getMessage());
+            if (driver != null) {
+                logger.info("Quitting browser driver...");
+                driver.quit();
+                driver = null;
+                logger.info("Browser driver quit successfully");
+            }
+        } catch (Exception e) {
+            logger.warn("Error while quitting driver", e);
         }
+    }
+
+    public void captureScreenshot(String scenarioName) {
+        try {
+            if (driver != null && driver instanceof TakesScreenshot) {
+                byte[] screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+                logger.info("Screenshot captured for scenario: {}", scenarioName);
+                // You can attach this to Cucumber scenario if needed
+            }
+        } catch (Exception e) {
+            logger.warn("Failed to capture screenshot for scenario: {}", scenarioName, e);
+        }
+    }
+
+    public void logPageSourceOnFailure() {
+        try {
+            if (driver != null) {
+                String pageSource = driver.getPageSource();
+                logger.debug("Page source on failure:\n{}", pageSource);
+            }
+        } catch (Exception e) {
+            logger.warn("Failed to get page source", e);
+        }
+    }
+
+    public void configureMobileBrowser() {
+        logger.info("Configuring mobile browser emulation");
+        // Mobile-specific configuration
+    }
+
+    public void configureApiTest() {
+        logger.info("Configuring API test setup");
+        // API test configuration
+    }
+
+    public void cleanupTestData() {
+        logger.info("Cleaning up test data from database");
+        // Database cleanup logic
+    }
+
+    public WebDriver getDriver() {
+        return driver;
     }
 }

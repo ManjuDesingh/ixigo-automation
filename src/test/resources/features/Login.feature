@@ -10,8 +10,8 @@ Feature: Ixigo Login with Mobile Number
     And user should be redirected to the ixigo home page
 
     Examples:
-      | Mobile Number |
-      | 9345535247    |
+      | Mobile       |
+      | 9345535247   |
 
   # Negative Test
   Scenario Outline: Unsuccessful login with invalid mobile number
@@ -22,5 +22,5 @@ Feature: Ixigo Login with Mobile Number
     Then an error message "<ErrorMessage>" should be displayed
 
     Examples:
-      | Mobile     | ErrorMessage                 |
-      | 12345      | Please enter a valid number  |
+      | Mobile | ErrorMessage                 |
+      | 12345  | Please enter a valid number  |

@@ -1,59 +1,102 @@
 package com.ixigo.stepDefinition;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.Assert;
-
+import com.ixigo.pages.*;
 import com.ixigo.setup.BaseSteps;
-
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
+import com.ixigo.parameters.ReporterUtil;
+import io.cucumber.datatable.DataTable;
+import io.cucumber.java.en.*;
+import org.openqa.selenium.WebDriver;
+import org.testng.Assert;
+import java.util.List;
+import java.util.Map;
 
 public class BookingSteps {
-	
-    WebDriver driver;
 
-	 @Given("user is on the ixigo login page")
-	    public void user_is_on_the_ixigo_login_page() throws InterruptedException {
-		 driver = BaseSteps.driver;
+    private WebDriver driver;
+    private SearchPage searchPage;
+    private FlightSelectionPage selectionPage;
+    private PassengerPage passengerPage;
 
-	        // now driver won't be null
-	        String expResult = "https://www.ixigo.com/";
-	        String actResult = driver.getCurrentUrl();
-	        Assert.assertEquals(actResult, expResult);
+    @Given("the user launches the browser and is on the Ixigo homepage")
+    public void launch_browser_and_homepage() {
+        BaseSteps.launchBrowser();
+        driver = BaseSteps.getDriver();
+        initializePages();
+        
+        Assert.assertTrue(driver.getCurrentUrl().contains("ixigo.com"), "Not on Ixigo homepage");
+        ReporterUtil.logInfo("Browser launched and user is on Ixigo homepage");
+    }
 
-	        Thread.sleep(2000);
-	  	}
+    @When("the user searches for flights from {string} to {string}")
+    public void search_flights(String from, String to) {
+        searchPage.enterFromCity(from);
+        searchPage.enterToCity(to);
+        ReporterUtil.logInfo("Entered flight route: " + from + " to " + to);
+    }
 
-	    @When("user selects the mobile number login option")
-	    public void user_selects_the_mobile_number_login_option() {
-	        // Code to select mobile number login option
-	    }
+    @When("the user selects departure and return dates")
+    public void select_dates() {
+        searchPage.selectDepartureDate();
+        searchPage.selectReturnDate();
+        ReporterUtil.logInfo("Selected departure and return dates");
+    }
 
-	    @When("user enters mobile number {string}")
-	    public void user_enters_mobile_number(String mobile) {
-	        // Code to enter mobile number
-	    }
+    @When("the user clicks on search")
+    public void click_search() {
+        searchPage.clickSearch();
+        ReporterUtil.logInfo("Initiated flight search");
+    }
 
-	    @When("user clicks on the Continue button")
-	    public void user_clicks_on_the_continue_button() {
-	        // Code to click continue
-	    }
+    @Then("flight search results should be displayed")
+    public void verify_search_results() {
+        Assert.assertTrue(selectionPage.isResultsDisplayed(), "Flight search results not displayed");
+        ReporterUtil.logPass("Flight search results displayed successfully");
+    }
 
-	    @Then("user should receive OTP and login should be successful")
-	    public void user_should_receive_otp_and_login_should_be_successful() {
-	        // Code to validate OTP step (mock or skip real OTP)
-	    }
+    @When("the user enters passenger details")
+    public void enter_passenger_details(DataTable passengerTable) {
+        List<Map<String, String>> passengers = passengerTable.asMaps(String.class, String.class);
+        
+        passengers.forEach(passenger -> {
+            passengerPage.fillPassengerDetails(
+                passenger.get("FirstName"),
+                passenger.get("LastName"),
+                passenger.get("Gender"),
+                passenger.get("DateOfBirth")
+            );
+            ReporterUtil.logInfo("Added passenger: " + passenger.get("FirstName") + " " + passenger.get("LastName"));
+        });
+    }
 
-	    @Then("user should be redirected to the ixigo home page")
-	    public void user_should_be_redirected_to_the_ixigo_home_page() {
-	        // Code to validate home page navigation
-	    }
+    @When("the user selects seat preferences")
+    public void select_seat_preferences(DataTable seatTable) {
+        List<Map<String, String>> seatPreferences = seatTable.asMaps(String.class, String.class);
+        
+        seatPreferences.forEach(seat -> {
+            passengerPage.selectSeat(seat.get("SeatType"));
+            ReporterUtil.logInfo("Selected seat preference: " + seat.get("SeatType"));
+        });
+    }
 
-	    @Then("an error message {string} should be displayed")
-	    public void an_error_message_should_be_displayed(String errorMessage) {
-	        // Code to validate error message
-	    }
+    @When("the user adds contact information")
+    public void add_contact_info(DataTable contactTable) {
+        Map<String, String> contact = contactTable.asMap(String.class, String.class);
+        
+        passengerPage.enterEmail(contact.get("Email"));
+        passengerPage.enterPhone(contact.get("Phone"));
+        ReporterUtil.logInfo("Contact information added - Email: " + contact.get("Email") + ", Phone: " + contact.get("Phone"));
+    }
 
+    @Then("passenger details should be submitted successfully")
+    public void verify_passenger_details_submission() {
+        Assert.assertTrue(passengerPage.arePassengerDetailsSubmitted(), "Passenger details submission failed");
+        ReporterUtil.logPass("Passenger details submitted successfully");
+    }
+
+    // Private helper method for page initialization
+    private void initializePages() {
+        searchPage = new SearchPage(driver);
+        selectionPage = new FlightSelectionPage(driver);
+        passengerPage = new PassengerPage(driver);
+    }
 }
