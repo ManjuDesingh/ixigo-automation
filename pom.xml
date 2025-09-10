@@ -21,7 +21,7 @@
 <dependency>
     <groupId>org.seleniumhq.selenium</groupId>
     <artifactId>selenium-java</artifactId>
-    <version>4.34.0</version>
+    <version>4.12.0</version>
 </dependency>
 
 <dependency>
@@ -49,6 +49,63 @@
 			<version>5.4.1</version>
 			
 		</dependency>
+		
+    <!-- REST Assured -->
+    <dependency>
+        <groupId>io.rest-assured</groupId>
+        <artifactId>rest-assured</artifactId>
+        <version>5.3.0</version>
+    </dependency>
+    
+    <!-- TestNG -->
+    <dependency>
+        <groupId>org.testng</groupId>
+        <artifactId>testng</artifactId>
+        <version>7.8.0</version>
+    </dependency>
+    
+    <!-- JSON Path -->
+    <dependency>
+        <groupId>io.rest-assured</groupId>
+        <artifactId>json-path</artifactId>
+        <version>5.3.0</version>
+    </dependency>
+    
+    <!-- REST Assured -->
+    <dependency>
+        <groupId>io.rest-assured</groupId>
+        <artifactId>rest-assured</artifactId>
+        <version>5.3.0</version>
+    </dependency>
+    
+    <!-- TestNG -->
+    <dependency>
+        <groupId>org.testng</groupId>
+        <artifactId>testng</artifactId>
+        <version>7.8.0</version>
+    </dependency>
+    
+    <!-- JSON Path -->
+    <dependency>
+        <groupId>io.rest-assured</groupId>
+        <artifactId>json-path</artifactId>
+        <version>5.3.0</version>
+    </dependency>
+    
+    <!-- For UUID generation -->
+    <dependency>
+        <groupId>com.fasterxml.uuid</groupId>
+        <artifactId>java-uuid-generator</artifactId>
+        <version>4.0.1</version>
+    </dependency>
+    <dependency>
+    <groupId>io.github.bonigarcia</groupId>
+    <artifactId>webdrivermanager</artifactId>
+    <version>5.6.3</version> <!-- or latest version -->
+    <scope>test</scope>
+</dependency>
 
-	</dependencies>
+
+</dependencies>
+	
 </project>

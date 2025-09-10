@@ -1,26 +1,23 @@
-Feature: Ixigo Login with Mobile Number
+Feature: Mobile Login
 
-  # Positive Test
+  @PositiveLogin
   Scenario Outline: Successful login with valid mobile number
-    Given user is on the ixigo login page
-    When user selects the mobile number login option
-    And user enters mobile number "<Mobile>"
-    And user clicks on the Continue button
-    Then user should receive OTP and login should be successful
-    And user should be redirected to the ixigo home page
+    Given the user is on the login page
+    When the user enters mobileno as "<Mobile_no>"
+    And enters the correct OTP
+    Then the user should be navigated to the booking page
 
     Examples:
-      | Mobile       |
-      | 9345535247   |
+      | Mobile_no   |
+      | 8438542755 |
 
-  # Negative Test
+  @NegativeLogin
   Scenario Outline: Unsuccessful login with invalid mobile number
-    Given user is on the ixigo login page
-    When user selects the mobile number login option
-    And user enters mobile number "<Mobile>"
-    And user clicks on the Continue button
-    Then an error message "<ErrorMessage>" should be displayed
+    Given the user is on the login page
+    When the user enters invalid mobileno as "<Mobile_No>"
+    And the user clicks the login button
+    Then the system should display "<error_message>"
 
     Examples:
-      | Mobile | ErrorMessage                 |
-      | 12345  | Please enter a valid number  |
+      | Mobile_No | error_message               |
+      | 12345     | Please enter a valid number |
