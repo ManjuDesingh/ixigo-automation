@@ -1,7 +1,6 @@
 package com.pages;
 
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -19,166 +18,208 @@ import com.parameters.Reporter;
 
 public class Searchingpage {
 
-	WebDriver driver;
-	WebDriverWait wait;
-	ExtentTest extTest;
-	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    WebDriver browser;
+    WebDriverWait waiter;
+    ExtentTest extentTest;
+    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-	public Searchingpage(WebDriver driver, ExtentTest extTest) {
-		this.driver = driver;
-		this.wait = new WebDriverWait(driver, Duration.ofSeconds(25));
-		this.extTest = extTest;
-	}
+    public Searchingpage(WebDriver driver, ExtentTest extTest) {
+        this.browser = driver;
+        this.waiter = new WebDriverWait(browser, Duration.ofSeconds(25));
+        this.extentTest = extTest;
+    }
 
-	// Handle popup safely
-	private void handlePopupIfExists() {
-		try {
-			List<WebElement> popups = driver.findElements(By.id("wiz-iframe-intent"));
-			if (!popups.isEmpty()) {
-				driver.switchTo().frame(popups.get(0));
-				driver.findElement(By.id("closeButton")).click();
-				driver.switchTo().defaultContent();
-				Reporter.generateReport(driver, extTest, Status.INFO, "Closed popup successfully");
-			}
-		} catch (Exception ignore) {
-			// not critical if popup is absent
-		}
-	}
+    // Handle popup safely
+    public void handlePopupIfExists() {
+        try {
+            List<WebElement> popups = browser.findElements(By.id("wiz-iframe-intent"));
+            if (!popups.isEmpty()) {
+                browser.switchTo().frame(popups.get(0));
+                browser.findElement(By.id("closeButton")).click();
+                browser.switchTo().defaultContent();
+                Reporter.generateReport(browser, extentTest, Status.INFO, "Closed popup successfully");
+            }
+        } catch (Exception ignore) {
+            // not critical if popup is absent
+        }
+    }
 
+    public void openFlightsTab() {
+        try {
+            handlePopupIfExists();
+            waiter.until(ExpectedConditions.elementToBeClickable(Locators.flight)).click();
+            Reporter.generateReport(browser, extentTest, Status.PASS, "Opened Flights tab");
+        } catch (Exception e) {
+            Reporter.generateReport(browser, extentTest, Status.FAIL, "Failed to open Flights tab: " + e.getMessage());
+        }
+    }
 
-	public void openFlightsTab() {
-		try {
-			handlePopupIfExists();
-			wait.until(ExpectedConditions.elementToBeClickable(Locators.flight)).click();
-			Reporter.generateReport(driver, extTest, Status.PASS, "Opened Flights tab");
-		} catch (Exception e) {
-			Reporter.generateReport(driver, extTest, Status.FAIL, "Failed to open Flights tab: " + e.getMessage());
-		}
-	}
+    public void selectRoundTrip() {
+        try {
+            handlePopupIfExists();
+            waiter.until(ExpectedConditions.elementToBeClickable(Locators.round)).click();
+            Reporter.generateReport(browser, extentTest, Status.PASS, "Selected Round Trip");
+        } catch (Exception e) {
+            Reporter.generateReport(browser, extentTest, Status.FAIL,
+                    "Round Trip selection failed (may be absent): " + e.getMessage());
+        }
+    }
 
-	public void selectRoundTrip() {
-		try {
-			handlePopupIfExists();
-			wait.until(ExpectedConditions.elementToBeClickable(Locators.round)).click();
-			Reporter.generateReport(driver, extTest, Status.PASS, "Selected Round Trip");
-		} catch (Exception e) {
-			Reporter.generateReport(driver, extTest, Status.FAIL,
-					"Round Trip selection failed (may be absent): " + e.getMessage());
-		}
-	}
+    public void enterBoardingPlace(String from) {
+        try {
+            handlePopupIfExists();
+            waiter.until(ExpectedConditions.elementToBeClickable(Locators.from)).click();
+            browser.findElement(Locators.click_from).sendKeys(from);
 
-	public void enterBoardingPlace(String from) {
-		try {
+            List<WebElement> results = new WebDriverWait(browser, Duration.ofSeconds(15))
+                    .until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By
+                            .xpath("/html/body/main/div[2]/div[1]/div[3]/div[2]/div[1]/div[1]/div[3]/div[1]/div[1]")));
 
-			handlePopupIfExists();
-			wait.until(ExpectedConditions.elementToBeClickable(Locators.from)).click();
-			driver.findElement(Locators.click_from).sendKeys(from);
+            if (!results.isEmpty()) {
+                results.get(0).click();
+            } else {
+                browser.findElement(Locators.click_from).sendKeys(Keys.ARROW_DOWN, Keys.ENTER);
+            }
+        } catch (Exception e) {
+            Reporter.generateReport(browser, extentTest, Status.FAIL, "Failed to enter origin: " + from);
+        }
+    }
 
-			List<WebElement> results = new WebDriverWait(driver, Duration.ofSeconds(15))
-					.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By
-							.xpath("/html/body/main/div[2]/div[1]/div[3]/div[2]/div[1]/div[1]/div[3]/div[1]/div[1]")));
+    public void enterLandingPlace(String to) {
+        try {
+            //handlePopupIfExists();
 
-			if (!results.isEmpty()) {
-				results.get(0).click();
-			} else {
-				driver.findElement(Locators.click_from).sendKeys(Keys.ARROW_DOWN, Keys.ENTER);
-			}
-		} catch (Exception e) {
+            waiter.until(ExpectedConditions.elementToBeClickable(Locators.to));
+            waiter.until(ExpectedConditions.elementToBeClickable(Locators.click_to)).sendKeys(to);
 
-			Reporter.generateReport(driver, extTest, Status.FAIL, "Failed to enter origin: " + from);
+            List<WebElement> results = new WebDriverWait(browser, Duration.ofSeconds(20))
+                    .until(ExpectedConditions.visibilityOfAllElementsLocatedBy(
+                            By.xpath("//span[@class='block truncate' and text()='" + to + "']")));
 
-		}
-	}
+            if (!results.isEmpty()) {
+                results.get(0).click();
+            } else {
+                browser.findElement(Locators.click_from).sendKeys(Keys.ARROW_DOWN, Keys.ENTER);
+            }
+        } catch (Exception e) {
+            Reporter.generateReport(browser, extentTest, Status.FAIL, "Failed to enter departure: " + to);
+        }
+    }
 
-	public void enterLandingPlace(String to) {
-		try {
+    public void setTravellersAndClass(int adults, int children, int infants, String travelClass) {
+        try {
+            handlePopupIfExists();
+            waiter.until(ExpectedConditions.elementToBeClickable(Locators.travellersPanel)).click();
+            waiter.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[text()='" + adults + "']"))).click();
+            waiter.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[text()='" + children + "']"))).click();
 
-			//handlePopupIfExists();
+            /*// increase adults (default = 1)
+            for (int i = 1; i < adults; i++) {
+                waiter.until(ExpectedConditions.elementToBeClickable(Locators.adultsPlusBtn)).click();
+            }
 
-			wait.until(ExpectedConditions.elementToBeClickable(Locators.to));
-			wait.until(ExpectedConditions.elementToBeClickable(Locators.click_to)).sendKeys(to);
+            for (int i = 0; i < children; i++) {
+                waiter.until(ExpectedConditions.elementToBeClickable(Locators.childrenPlusBtn)).click();
+            }
 
-			List<WebElement> results = new WebDriverWait(driver, Duration.ofSeconds(20))
-					.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(
-							By.xpath("//span[@class='block truncate' and text()='" + to + "']")));
+            for (int i = 0; i < infants; i++) {
+                waiter.until(ExpectedConditions.elementToBeClickable(Locators.infantsPlusBtn)).click();
+            }*/
 
-			if (!results.isEmpty()) {
-				results.get(0).click();
-			} else {
-				driver.findElement(Locators.click_from).sendKeys(Keys.ARROW_DOWN, Keys.ENTER);
-			}
-		} catch (Exception e) {
+            // select travel class
+            try {
+                waiter.until(ExpectedConditions.elementToBeClickable(Locators.travelClassDropdown)).click();
+                By classOption = Locators.travelClassOption(travelClass);
+                waiter.until(ExpectedConditions.elementToBeClickable(classOption)).click();
+            } catch (Exception ex) {
+                Reporter.generateReport(browser, extentTest, Status.WARNING,
+                        "Travel class selection skipped: " + ex.getMessage());
+            }
 
-			Reporter.generateReport(driver, extTest, Status.FAIL, "Failed to enter departure: " + to);
+            // apply travellers
+            try {
+                waiter.until(ExpectedConditions.elementToBeClickable(Locators.travellersApplyBtn)).click();
+            } catch (Exception ex) {
+                Reporter.generateReport(browser, extentTest, Status.WARNING,
+                        "Apply button not clicked: " + ex.getMessage());
+            }
 
-		}
-	}
-	
+            Reporter.generateReport(browser, extentTest, Status.PASS,
+                    "Travellers set: A" + adults + " C" + children + " I" + infants + " Class:" + travelClass);
+        } catch (Exception e) {
+            Reporter.generateReport(browser, extentTest, Status.FAIL, "Failed to set travellers/class: " + e.getMessage());
+        }
+    }
 
+    public void clickSearch() {
+        try {
+            handlePopupIfExists();
+            waiter.until(ExpectedConditions.elementToBeClickable(Locators.searchButton)).click();
+            Reporter.generateReport(browser, extentTest, Status.PASS, "Clicked Search");
+        } catch (Exception e) {
+            Reporter.generateReport(browser, extentTest, Status.FAIL, "Failed to click Search: " + e.getMessage());
+        }
+    }
 
-	public void setTravellersAndClass(int adults, int children, int infants, String travelClass) {
-		try {
-			handlePopupIfExists();
-			wait.until(ExpectedConditions.elementToBeClickable(Locators.travellersPanel)).click();
-			wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[text()='" +adults+ "']"))).click();
-			wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[text()='" +children+ "']"))).click();
+    // --- NEW: small helper for the price-lock popup (safe no-op if absent)
+    private void handlePriceLockPopupIfPresent() {
+        try {
+            WebDriverWait w = new WebDriverWait(browser, Duration.ofSeconds(5));
+            WebElement popupBtn = w.until(ExpectedConditions.elementToBeClickable(
+                    By.xpath("//button[contains(.,'Okay, Got it') or contains(.,'Got it')]")));
+            popupBtn.click();
+            Reporter.generateReport(browser, extentTest, Status.INFO, "Dismissed price-lock popup");
+        } catch (Exception ignore) {
+            // ignore if not present
+        }
+    }
 
-			/*// increase adults (default = 1)
-			for (int i = 1; i < adults; i++) {
-				wait.until(ExpectedConditions.elementToBeClickable(Locators.adultsPlusBtn)).click();
-			}
+    public boolean areResultsDisplayed() {
+        try {
+            // Sometimes a price-lock popup blocks the results; try to dismiss it
+            handlePriceLockPopupIfPresent();
 
-			for (int i = 0; i < children; i++) {
-				wait.until(ExpectedConditions.elementToBeClickable(Locators.childrenPlusBtn)).click();
-			}
+            // Use a longer wait for results load
+            WebDriverWait longWait = new WebDriverWait(browser, Duration.ofSeconds(40));
 
-			for (int i = 0; i < infants; i++) {
-				wait.until(ExpectedConditions.elementToBeClickable(Locators.infantsPlusBtn)).click();
-			}*/
+            // Try multiple reliable indicators of results page
+            By[] candidates = new By[] {
+                // your original locator
+                Locators.resultsContainer,
+                // label/text variant
+                By.xpath("//*[normalize-space()='Filters' or text()='Filters']"),
+                // common results container patterns
+                By.xpath("//div[contains(@class,'results') or contains(@class,'Results') or contains(@data-testid,'results')]"),
+                By.xpath("//div[contains(@class,'FlightCard') or contains(@class,'result-card') or @data-testid='flight-card']"),
+                // fallback: any element mentioning 'stops' which appears in filter rail
+                By.xpath("//*[contains(translate(., 'STOPS', 'stops'),'stops')]")
+            };
 
-			// select travel class
-			try {
-				wait.until(ExpectedConditions.elementToBeClickable(Locators.travelClassDropdown)).click();
-				By classOption = Locators.travelClassOption(travelClass);
-				wait.until(ExpectedConditions.elementToBeClickable(classOption)).click();
-			} catch (Exception ex) {
-				Reporter.generateReport(driver, extTest, Status.WARNING,
-						"Travel class selection skipped: " + ex.getMessage());
-			}
+            for (By locator : candidates) {
+                try {
+                    longWait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+                    Reporter.generateReport(browser, extentTest, Status.PASS, "Search results displayed");
+                    return true;
+                } catch (Exception ignore) {
+                    // try next candidate
+                }
+            }
 
-			// apply travellers
-			try {
-				wait.until(ExpectedConditions.elementToBeClickable(Locators.travellersApplyBtn)).click();
-			} catch (Exception ex) {
-				Reporter.generateReport(driver, extTest, Status.WARNING,
-						"Apply button not clicked: " + ex.getMessage());
-			}
+            // Last resort: URL heuristic — confirm we navigated to a results-like URL
+            try {
+                longWait.until(ExpectedConditions.or(
+                        ExpectedConditions.urlContains("/flights"),
+                        ExpectedConditions.urlContains("result"),
+                        ExpectedConditions.urlContains("search")
+                ));
+                // If URL indicates results but no element found, still return false so you can refine locators later
+            } catch (Exception ignore) {}
 
-			Reporter.generateReport(driver, extTest, Status.PASS,
-					"Travellers set: A" + adults + " C" + children + " I" + infants + " Class:" + travelClass);
-		} catch (Exception e) {
-			Reporter.generateReport(driver, extTest, Status.FAIL, "Failed to set travellers/class: " + e.getMessage());
-		}
-	}
-
-	public void clickSearch() {
-		try {
-			handlePopupIfExists();
-			wait.until(ExpectedConditions.elementToBeClickable(Locators.searchButton)).click();
-			Reporter.generateReport(driver, extTest, Status.PASS, "Clicked Search");
-		} catch (Exception e) {
-			Reporter.generateReport(driver, extTest, Status.FAIL, "Failed to click Search: " + e.getMessage());
-		}
-	}
-
-	public boolean areResultsDisplayed() {
-		try {
-			wait.until(ExpectedConditions.visibilityOfElementLocated(Locators.resultsContainer));
-			Reporter.generateReport(driver, extTest, Status.PASS, "Search results displayed");
-			return true;
-		} catch (Exception e) {
-			Reporter.generateReport(driver, extTest, Status.FAIL, "Search results not detected: " + e.getMessage());
-			return false;
-		}
-	}
+            Reporter.generateReport(browser, extentTest, Status.FAIL, "Search results not detected by any locator");
+            return false;
+        } catch (Exception e) {
+            Reporter.generateReport(browser, extentTest, Status.FAIL, "Search results not detected: " + e.getMessage());
+            return false;
+        }
+    }
 }

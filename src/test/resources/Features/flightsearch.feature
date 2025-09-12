@@ -12,4 +12,4 @@ Feature: Search Round Trip Flights
 
     Examples:
       | from           | to         |  adults | children | infants | travel_class |
-      | Chennai  | Mumbai |  1      | 1      | 0       | Economy      |
+      | Chennai        | Mumbai     |  1      | 0        | 0       | Economy      |

@@ -44,8 +44,8 @@ public class Hooks extends Base {
 	@After
 	public void tearDown() {
 		Base.sleep();
-		/*
-		 * if (driver != null) { driver.quit(); }
-		 */
+		
+		  if (driver != null) { driver.quit(); }
+		 
 	}
 }

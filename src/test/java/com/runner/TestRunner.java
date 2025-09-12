@@ -5,11 +5,12 @@ import io.cucumber.testng.CucumberOptions;
 
 
 @CucumberOptions(
-	features="src/test/resources/features",
+	features="src/test/resources/Features",
 	glue="com.stepdefinitions",
 	plugin= {"pretty","html:reports/cucumber-html-report.html"}
     
 )
-public class Testrunner extends AbstractTestNGCucumberTests {
+public class TestRunner extends AbstractTestNGCucumberTests {
 	
+
 }

@@ -1,27 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testng-results ignored="0" total="4" passed="0" failed="4" skipped="0">
+<testng-results ignored="0" total="5" passed="4" failed="1" skipped="0">
   <reporter-output>
   </reporter-output>
-  <suite started-at="2025-09-10T14:36:51 IST" name="Default suite" finished-at="2025-09-10T14:39:53 IST" duration-ms="181683">
+  <suite started-at="2025-09-12T14:22:27 IST" name="Default suite" finished-at="2025-09-12T14:31:35 IST" duration-ms="547744">
     <groups>
       <group name="cucumber">
-        <method signature="AbstractTestNGCucumberTests.runScenario(io.cucumber.testng.PickleWrapper,io.cucumber.testng.FeatureWrapper)[pri:0, instance:com.runner.Testrunner@4009e306]" name="runScenario" class="io.cucumber.testng.AbstractTestNGCucumberTests"/>
+        <method signature="AbstractTestNGCucumberTests.runScenario(io.cucumber.testng.PickleWrapper,io.cucumber.testng.FeatureWrapper)[pri:0, instance:com.runner.TestRunner@24313fcc]" name="runScenario" class="io.cucumber.testng.AbstractTestNGCucumberTests"/>
       </group> <!-- cucumber -->
     </groups>
-    <test started-at="2025-09-10T14:36:51 IST" name="Default test" finished-at="2025-09-10T14:39:53 IST" duration-ms="181683">
-      <class name="com.runner.Testrunner">
-        <test-method is-config="true" signature="setUpClass(org.testng.ITestContext)[pri:0, instance:com.runner.Testrunner@4009e306]" started-at="2025-09-10T14:36:51 IST" name="setUpClass" finished-at="2025-09-10T14:36:53 IST" duration-ms="1524" status="PASS">
+    <test started-at="2025-09-12T14:22:27 IST" name="Default test" finished-at="2025-09-12T14:31:35 IST" duration-ms="547744">
+      <class name="com.runner.TestRunner">
+        <test-method is-config="true" signature="setUpClass(org.testng.ITestContext)[pri:0, instance:com.runner.TestRunner@24313fcc]" started-at="2025-09-12T14:22:27 IST" name="setUpClass" finished-at="2025-09-12T14:22:28 IST" duration-ms="1534" status="PASS">
           <params>
             <param index="0">
               <value>
-                <![CDATA[org.testng.TestRunner@4fd92289]]>
+                <![CDATA[org.testng.TestRunner@7a023e34]]>
               </value>
             </param>
           </params>
           <reporter-output>
           </reporter-output>
         </test-method> <!-- setUpClass -->
-        <test-method signature="runScenario(io.cucumber.testng.PickleWrapper,io.cucumber.testng.FeatureWrapper)[pri:0, instance:com.runner.Testrunner@4009e306]" started-at="2025-09-10T14:36:53 IST" name="runScenario" description="Runs Cucumber Scenarios" data-provider="scenarios" finished-at="2025-09-10T14:38:24 IST" duration-ms="90985" status="FAIL">
+        <test-method signature="runScenario(io.cucumber.testng.PickleWrapper,io.cucumber.testng.FeatureWrapper)[pri:0, instance:com.runner.TestRunner@24313fcc]" started-at="2025-09-12T14:22:28 IST" name="runScenario" description="Runs Cucumber Scenarios" data-provider="scenarios" finished-at="2025-09-12T14:23:06 IST" duration-ms="37682" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA["Positive cab booking flow from Home To Aiport"]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA["Airport Cab Booking"]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- runScenario -->
+        <test-method signature="runScenario(io.cucumber.testng.PickleWrapper,io.cucumber.testng.FeatureWrapper)[pri:0, instance:com.runner.TestRunner@24313fcc]" started-at="2025-09-12T14:23:06 IST" name="runScenario" description="Runs Cucumber Scenarios" data-provider="scenarios" finished-at="2025-09-12T14:27:53 IST" duration-ms="286454" status="FAIL">
           <params>
             <param index="0">
               <value>
@@ -41,17 +57,17 @@
             <full-stacktrace>
               <![CDATA[java.lang.AssertionError: Expected search results to be displayed expected [true] but found [false]
 at org.testng.Assert.fail(Assert.java:111)
-at org.testng.Assert.failNotEquals(Assert.java:1578)
+at org.testng.Assert.failNotEquals(Assert.java:1590)
 at org.testng.Assert.assertTrue(Assert.java:57)
 at com.stepdefinitions.searchingdefinitions.search_results_should_be_displayed(searchingdefinitions.java:62)
-at ✽.search results should be displayed(file:///C:/Users/DELL/ixigo-automation/src/test/resources/features/flightsearch.feature:11)
+at ✽.search results should be displayed(file:///C:/Users/DELL/ixigo-automation/src/test/resources/Features/flightsearch.feature:11)
 ]]>
             </full-stacktrace>
           </exception> <!-- java.lang.AssertionError -->
           <reporter-output>
           </reporter-output>
         </test-method> <!-- runScenario -->
-        <test-method signature="runScenario(io.cucumber.testng.PickleWrapper,io.cucumber.testng.FeatureWrapper)[pri:0, instance:com.runner.Testrunner@4009e306]" started-at="2025-09-10T14:38:24 IST" name="runScenario" description="Runs Cucumber Scenarios" data-provider="scenarios" finished-at="2025-09-10T14:38:31 IST" duration-ms="7204" status="FAIL">
+        <test-method signature="runScenario(io.cucumber.testng.PickleWrapper,io.cucumber.testng.FeatureWrapper)[pri:0, instance:com.runner.TestRunner@24313fcc]" started-at="2025-09-12T14:27:53 IST" name="runScenario" description="Runs Cucumber Scenarios" data-provider="scenarios" finished-at="2025-09-12T14:28:50 IST" duration-ms="57627" status="PASS">
           <params>
             <param index="0">
               <value>
@@ -64,25 +80,10 @@ at ✽.search results should be displayed(file:///C:/Users/DELL/ixigo-automation
               </value>
             </param>
           </params>
-          <exception class="java.lang.Error">
-            <message>
-              <![CDATA[Unresolved compilation problem: 
-The method sleep(int) in the type Base is not applicable for the arguments ()
-]]>
-            </message>
-            <full-stacktrace>
-              <![CDATA[java.lang.Error: Unresolved compilation problem: 
-The method sleep(int) in the type Base is not applicable for the arguments ()
-
-at com.stepdefinitions.Logindefinitions.enters_the_correct_otp(Logindefinitions.java:58)
-at ✽.enters the correct OTP(file:///C:/Users/DELL/ixigo-automation/src/test/resources/features/login.feature:7)
-]]>
-            </full-stacktrace>
-          </exception> <!-- java.lang.Error -->
           <reporter-output>
           </reporter-output>
         </test-method> <!-- runScenario -->
-        <test-method signature="runScenario(io.cucumber.testng.PickleWrapper,io.cucumber.testng.FeatureWrapper)[pri:0, instance:com.runner.Testrunner@4009e306]" started-at="2025-09-10T14:38:31 IST" name="runScenario" description="Runs Cucumber Scenarios" data-provider="scenarios" finished-at="2025-09-10T14:38:39 IST" duration-ms="7679" status="FAIL">
+        <test-method signature="runScenario(io.cucumber.testng.PickleWrapper,io.cucumber.testng.FeatureWrapper)[pri:0, instance:com.runner.TestRunner@24313fcc]" started-at="2025-09-12T14:28:50 IST" name="runScenario" description="Runs Cucumber Scenarios" data-provider="scenarios" finished-at="2025-09-12T14:28:59 IST" duration-ms="8768" status="PASS">
           <params>
             <param index="0">
               <value>
@@ -95,24 +96,10 @@ at ✽.enters the correct OTP(file:///C:/Users/DELL/ixigo-automation/src/test/re
               </value>
             </param>
           </params>
-          <exception class="java.lang.Error">
-            <message>
-              <![CDATA[Unresolved compilation problem: 
-The method sleep(int) in the type Base is not applicable for the arguments ()
-]]>
-            </message>
-            <full-stacktrace>
-              <![CDATA[java.lang.Error: Unresolved compilation problem: 
-The method sleep(int) in the type Base is not applicable for the arguments ()
-
-at com.stepdefinitions.Hooks.tearDown(Hooks.java:46)
-]]>
-            </full-stacktrace>
-          </exception> <!-- java.lang.Error -->
           <reporter-output>
           </reporter-output>
         </test-method> <!-- runScenario -->
-        <test-method signature="runScenario(io.cucumber.testng.PickleWrapper,io.cucumber.testng.FeatureWrapper)[pri:0, instance:com.runner.Testrunner@4009e306]" started-at="2025-09-10T14:38:39 IST" name="runScenario" description="Runs Cucumber Scenarios" data-provider="scenarios" finished-at="2025-09-10T14:39:52 IST" duration-ms="72860" status="FAIL">
+        <test-method signature="runScenario(io.cucumber.testng.PickleWrapper,io.cucumber.testng.FeatureWrapper)[pri:0, instance:com.runner.TestRunner@24313fcc]" started-at="2025-09-12T14:28:59 IST" name="runScenario" description="Runs Cucumber Scenarios" data-provider="scenarios" finished-at="2025-09-12T14:31:34 IST" duration-ms="154586" status="PASS">
           <params>
             <param index="0">
               <value>
@@ -125,29 +112,14 @@ at com.stepdefinitions.Hooks.tearDown(Hooks.java:46)
               </value>
             </param>
           </params>
-          <exception class="java.lang.AssertionError">
-            <message>
-              <![CDATA[expected [true] but found [false]]]>
-            </message>
-            <full-stacktrace>
-              <![CDATA[java.lang.AssertionError: expected [true] but found [false]
-at org.testng.Assert.fail(Assert.java:111)
-at org.testng.Assert.failNotEquals(Assert.java:1578)
-at org.testng.Assert.assertTrue(Assert.java:57)
-at org.testng.Assert.assertTrue(Assert.java:67)
-at com.stepdefinitions.Selectiondefinition.the_user_wants_to_apply_the_first_filter_recommended_filter_as(Selectiondefinition.java:33)
-at ✽.the user wants to apply the first filter recommended_filter as "Non-stop"(file:///C:/Users/DELL/ixigo-automation/src/test/resources/features/selection.feature:4)
-]]>
-            </full-stacktrace>
-          </exception> <!-- java.lang.AssertionError -->
           <reporter-output>
           </reporter-output>
         </test-method> <!-- runScenario -->
-        <test-method is-config="true" signature="tearDownClass()[pri:0, instance:com.runner.Testrunner@4009e306]" started-at="2025-09-10T14:39:52 IST" name="tearDownClass" finished-at="2025-09-10T14:39:53 IST" duration-ms="1310" status="PASS">
+        <test-method is-config="true" signature="tearDownClass()[pri:0, instance:com.runner.TestRunner@24313fcc]" started-at="2025-09-12T14:31:34 IST" name="tearDownClass" finished-at="2025-09-12T14:31:35 IST" duration-ms="914" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- tearDownClass -->
-      </class> <!-- com.runner.Testrunner -->
+      </class> <!-- com.runner.TestRunner -->
     </test> <!-- Default test -->
   </suite> <!-- Default suite -->
 </testng-results>
