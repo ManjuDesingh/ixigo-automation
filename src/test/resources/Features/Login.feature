@@ -9,7 +9,7 @@ Feature: Mobile Login
 
     Examples:
       | Mobile_no   |
-      | 8939669267  |
+      | 8015993932  |
 
   @NegativeLogin
   Scenario Outline: Unsuccessful login with invalid mobile number

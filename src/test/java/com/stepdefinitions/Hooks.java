@@ -33,7 +33,7 @@ public class Hooks extends Base {
 			extReports.flush();
 		}
 	}
-
+	
 	@Before
 	public void setUp(Scenario scenario) {
 		launchBrowser(); // Initialize driver

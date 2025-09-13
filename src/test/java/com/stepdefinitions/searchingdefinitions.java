@@ -24,7 +24,7 @@ public class searchingdefinitions {
         String expected = Base.driver.getCurrentUrl(); // or you can assert specific URL if you want
     }
 
-    @When("the user selects {string} trip type")
+    @When("the user selects \"Round Trip\" trip type")
     public void the_user_selects_trip_type(String tripType) {
         // Only Round Trip handled for now
         if (tripType.equalsIgnoreCase("Round Trip")) {
