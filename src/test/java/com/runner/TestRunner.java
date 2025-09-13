@@ -5,7 +5,7 @@ import io.cucumber.testng.CucumberOptions;
 
 
 @CucumberOptions(
-	features="src/test/resources/Features",
+	features="src/test/resources/Features/Flight Tracker.feature",
 	glue="com.stepdefinitions",
 	plugin= {"pretty","html:reports/cucumber-html-report.html"}
     
